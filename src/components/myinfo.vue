@@ -55,7 +55,7 @@ export default {
   data () {
     return {
       num:1,
-      data:[{id:5,time:"2019.01.01",status:"订单评审",money:10000,cername:"iso9001"},{id:6, phone:1351,cername:"iso91111"}]
+      data:[{id:5,time:"2019.01.01",status:"订单评审",money:10000,cername:"iso9001"},{id:5,time:"2019.01.01",status:"订单评审",money:10000,cername:"iso9001"},{id:5,time:"2019.01.01",status:"订单评审",money:10000,cername:"iso9001"},{id:5,time:"2019.01.01",status:"订单评审",money:10000,cername:"iso9001"},{id:5,time:"2019.01.01",status:"订单评审",money:10000,cername:"iso9001"},{id:5,time:"2019.01.01",status:"订单评审",money:10000,cername:"iso9001"},{id:5,time:"2019.01.01",status:"订单评审",money:10000,cername:"iso9001"},{id:5,time:"2019.01.01",status:"订单评审",money:10000,cername:"iso9001"},{id:5,time:"2019.01.01",status:"订单评审",money:10000,cername:"iso9001"}]
     }
   },
   mounted(){
@@ -156,6 +156,7 @@ export default {
   border-radius: 10/75rem;
   box-sizing: border-box;
   padding: 25/75rem;
+  overflow-y:scroll ;
   .title{
     display: flex;
     justify-content: space-between;
