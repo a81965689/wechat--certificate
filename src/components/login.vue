@@ -57,7 +57,7 @@ export default {
         this.msg="发送成功";
         this.showtip()
         if(msg.code!=1){
-         this.tipshow=msg.message;
+         this.msg=msg.message;
          this.showtip()
          return false
         }
@@ -77,12 +77,12 @@ export default {
       this.axios({
         method:"post",
         url:this.$api.api.login,
-        data:{tel:this.phonenumber,login_type:2,ident:textcode}
+        data:{tel:this.phonenumber,login_type:2,ident:this.textcode}
       })
       .then((msg)=>{
       console.log(msg);
       if(msg.code==1){
-        this.$Cookies.set('logininfo', {userid:msg.data.id,companyname:msg.data.company,usertel:msg.data.tel,companycontacts:msg.data.contacts},{expires:180});
+      this.$Cookies.set('logininfo', {userid:msg.data.id,companyname:msg.data.company,usertel:msg.data.tel,companycontacts:msg.data.contacts},{expires:180});
       this.$router.push({
           name:"myinfo"
         })
