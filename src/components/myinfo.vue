@@ -11,19 +11,19 @@
               <img src="https://rwxoss.oss-cn-hangzhou.aliyuncs.com/gzh/contract.png">
               <p :class="num==2?'red':''">合同评审</p>
             </li>
-            <li class="plane">
+            <li class="plane" @touchstart=getdata(3)>
               <img src="https://rwxoss.oss-cn-hangzhou.aliyuncs.com/gzh/plane.png">
               <p :class="num==3?'red':''">计划排定</p>
             </li>
-            <li class="doit">
+            <li class="doit" @touchstart=getdata(4)>
               <img src="https://rwxoss.oss-cn-hangzhou.aliyuncs.com/gzh/doit.png">
               <p :class="num==4?'red':''">审核实施</p>
             </li>
-            <li class="passed">
+            <li class="passed" @touchstart=getdata(5)>
               <img src="https://rwxoss.oss-cn-hangzhou.aliyuncs.com/gzh/passed.png">
               <p :class="num==5?'red':''">已出证</p>
             </li>
-            <li class="annual">
+            <li class="annual" @touchstart=getdata(6)>
               <img src="https://rwxoss.oss-cn-hangzhou.aliyuncs.com/gzh/annual.png">
               <p :class="num==6?'red':''">待年审</p>
             </li>
@@ -38,7 +38,7 @@
         <div>订单状态</div>
       </div>
       <div class="listdata" v-for='(item,index) in data' :key="index">
-        <router-link :to="{name:'login',params:{id:item.id}}" tag="div" class="list_row">
+        <router-link :to="{name:'detail',params:{id:item.id}}" tag="div" class="list_row">
           <div class="cer_name">{{item.cername}}</div>
           <div class="time">{{item.time}}</div>
           <div class="money">{{item.money}}</div>
@@ -46,20 +46,38 @@
         </router-link>
       </div>
     </div>
+    <div class="companyname">
+      <p>公司名称：{{companyname}}</p>
+      <p>企业对接人：{{dockman}}</p>
+    </div>
+    <bottombar></bottombar>
   </div>
 </template>
 
 <script>
+import bottombar from '../components/bottombar';
 export default {
   name: 'myinfo',
   data () {
     return {
       num:1,
+      companyname:"认我行",
+      dockman:"自己",
       data:[{id:5,time:"2019.01.01",status:"订单评审",money:10000,cername:"iso9001"},{id:5,time:"2019.01.01",status:"订单评审",money:10000,cername:"iso9001"},{id:5,time:"2019.01.01",status:"订单评审",money:10000,cername:"iso9001"},{id:5,time:"2019.01.01",status:"订单评审",money:10000,cername:"iso9001"},{id:5,time:"2019.01.01",status:"订单评审",money:10000,cername:"iso9001"},{id:5,time:"2019.01.01",status:"订单评审",money:10000,cername:"iso9001"},{id:5,time:"2019.01.01",status:"订单评审",money:10000,cername:"iso9001"},{id:5,time:"2019.01.01",status:"订单评审",money:10000,cername:"iso9001"},{id:5,time:"2019.01.01",status:"订单评审",money:10000,cername:"iso9001"}]
     }
   },
   mounted(){
-
+    if(!this.$Cookies.get("logininfo")){
+            this.$router.push({
+          name:"login"
+        })
+    }
+    // this.$Cookies.set('264163514', '123',{expires:180});
+    // Cookies.get()
+    // Cookies.remove('name');
+  },
+  components:{
+    bottombar
   },
   methods:{
     getdata:function(n){
@@ -73,7 +91,7 @@ export default {
 <style scoped lang="less">
 .myinfo{
   background-color: #F2F2F2;
-  height: 100vh;
+  min-height: 100vh;
 }
 .tabbar{
   width:100%;
@@ -173,6 +191,22 @@ export default {
   display: flex;
   .cer_name,.time,.money{
     width: 180/75rem;
+  }
+}
+.companyname{
+  width: 698/75rem;
+  height: 120/75rem;
+  background-color: #13D1BE;
+  margin: 0 auto;
+  border-radius: 10/75rem;
+  p{
+    font-size: 32/75rem;
+    font-weight: bold;
+    color: #fff;
+    height: 60/75rem;
+    padding-left: 85/75rem;
+    box-sizing: border-box;
+    padding-top: 12/75rem;
   }
 }
 </style>

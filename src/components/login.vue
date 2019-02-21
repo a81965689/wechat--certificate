@@ -6,18 +6,15 @@
         <span @touchstart='sendMessage'>{{text}}</span>
       </div>
       <div class="textcode">
-        <input placeholder="请输入验证码">
+        <input placeholder="请输入验证码" v-model="textcode">
       </div>
     </div>
-    <!-- <slider></slider> -->
     <div class='tip' v-bind:class="[{show:tipshow}]">{{msg}}</div>
     <div class="submit" @click="login">确认绑定</div>
   </div>
 </template>
 
 <script>
-// import slider from '../components/slidebar';
-// import wx from 'weixin-js-sdk'
 export default {
   name: 'login',
   data () {
@@ -25,35 +22,46 @@ export default {
       phonenumber:'',
       text:"发送验证码",
       msg:'',
-      tipshow:0
-      // verifying:''
+      tipshow:0,
+      textcode:''
     }
   },
   components:{
-    // slider
+    
     },
     mounted(){
-      //接收子组件传过来的验证数据判断是否已经验证
-      // this.get()
+
     },
   methods:{
-    // get:function(){
-    //     eventBus.$on("Verifying",(val)=>{
-    //     this.verifying=val
-    //   })
-    // },
     //显示错误提示
-    shwotip:function(){
+    showtip:function(){
         this.tipshow=1;
         setTimeout(()=>{
         this.tipshow=0;
        },2500)
     },
     sendMessage:function(){
-     if(!(/^1(3|4|5|7|8)\d{9}$/.test(this.phonenumber))){
+     if(!(/^1(3|4|5|7|8|9)\d{9}$/.test(this.phonenumber))){
        this.msg="手机号码错误请重新输入";
-        this.shwotip()
+        this.showtip()
+        return false
     }else{
+      //
+      this.axios({
+        method:"post",
+        url:this.$api.api.textcode,
+        data:{tel:this.phonenumber,type:2}
+      })
+      .then((msg)=>{
+        console.log(msg)
+        this.msg="发送成功";
+        this.showtip()
+        if(msg.code!=1){
+         this.tipshow=msg.message;
+         this.showtip()
+         return false
+        }
+      });
       let n=60
       var timer=setInterval(() => {
         if(n>0){
@@ -66,13 +74,22 @@ export default {
     }
     },
     login:function(){
-      // if(this.verifying){
-      //   console.log(this.verifying)
-      // }else{
-      //   this.msg="请先滑动滑块验证";
-      //   this.shwotip()
-      // }
+      this.axios({
+        method:"post",
+        url:this.$api.api.login,
+        data:{tel:this.phonenumber,login_type:2,ident:textcode}
+      })
+      .then((msg)=>{
+      console.log(msg);
+      if(msg.code==1){
+        this.$Cookies.set('logininfo', {userid:msg.data.id,companyname:msg.data.company,usertel:msg.data.tel,companycontacts:msg.data.contacts},{expires:180});
+      this.$router.push({
+          name:"myinfo"
+        })
+      }
+    })
     }
+
   }
 }
 </script>

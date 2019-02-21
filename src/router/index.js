@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
 import login from '@/components/login'
 import myinfo from '@/components/myinfo'
+import detail from '@/components/detail'
 Vue.use(Router)
 
 const routes=[
@@ -19,7 +19,15 @@ const routes=[
     name: 'login',
     component: login,
     meta:{
-      title:"绑定手机号"
+      title:"登录"
+    }
+  },
+  {
+    path: '/detail',
+    name: 'detail',
+    component: detail,
+    meta:{
+      title:"证书详情"
     }
   }
 ]

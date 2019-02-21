@@ -5,9 +5,13 @@ import App from './App'
 import router from './router'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-Vue.config.productionTip = false
+import Cookies from 'js-cookie';
+import api from '../src/api/api'
+Vue.config.productionTip = false;
+Vue.prototype.$Cookies = Cookies;
+Vue.prototype.$api = api;
 Vue.use(VueAxios, axios)
-window.eventBus=new Vue();
+// window.eventBus=new Vue();
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
