@@ -3,14 +3,14 @@
     <div class="phonearea">
       <div class="phone">
         <input placeholder="请输入手机号" v-model="phonenumber">
-        <span @touchstart='sendMessage'>{{text}}</span>
+        <span @click='sendMessage'>{{text}}</span>
       </div>
       <div class="textcode">
         <input placeholder="请输入验证码" v-model="textcode">
       </div>
     </div>
     <div class='tip' v-bind:class="[{show:tipshow}]">{{msg}}</div>
-    <div class="submit" @click="login">确认绑定</div>
+    <div class="submit" @click="login">登录</div>
   </div>
 </template>
 
@@ -23,14 +23,15 @@ export default {
       text:"发送验证码",
       msg:'',
       tipshow:0,
-      textcode:''
+      textcode:'',
+      send:''
     }
   },
   components:{
     
     },
     mounted(){
-
+      
     },
   methods:{
     //显示错误提示
@@ -43,10 +44,13 @@ export default {
     sendMessage:function(){
      if(!(/^1(3|4|5|7|8|9)\d{9}$/.test(this.phonenumber))){
        this.msg="手机号码错误请重新输入";
-        this.showtip()
+        this.showtip();
+        return false;
+    }
+    else{
+      if(this.send=="sended"){
         return false
-    }else{
-      //
+      }
       this.axios({
         method:"post",
         url:this.$api.api.textcode,
@@ -54,23 +58,25 @@ export default {
       })
       .then((msg)=>{
         console.log(msg)
-        this.msg="发送成功";
-        this.showtip()
-        if(msg.code!=1){
-         this.msg=msg.message;
+        if(msg.data.code!=1){
+         this.msg="账号尚未开通";
          this.showtip()
-         return false
+         return false;
         }
-      });
+        this.msg="发送成功";
+        this.send="sended"
+        this.showtip()
       let n=60
-      var timer=setInterval(() => {
+      var timer=setInterval(() =>{
         if(n>0){
           this.text=n--+'s'
         }else{
-          this.text="再次发送验证码";
+          this.text="重发验证码";
+          this.send='';
           clearInterval(timer)
         }
       }, 1000);
+      });
     }
     },
     login:function(){
@@ -81,15 +87,17 @@ export default {
       })
       .then((msg)=>{
       console.log(msg);
-      if(msg.code==1){
-      this.$Cookies.set('logininfo', {userid:msg.data.id,companyname:msg.data.company,usertel:msg.data.tel,companycontacts:msg.data.contacts},{expires:180});
+      if(msg.data.code==1&&msg.data.message=="登录成功！"){
+      this.$Cookies.set('logininfo', {userid:msg.data.data.id,companyname:msg.data.data.company,usertel:msg.data.data.tel,companycontacts:msg.data.data.contacts},{expires:180});
       this.$router.push({
           name:"myinfo"
         })
+      }else{
+        this.msg="手机号码尚未注册";
+        this.showtip()
       }
     })
     }
-
   }
 }
 </script>

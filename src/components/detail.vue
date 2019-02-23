@@ -1,10 +1,10 @@
 <template>
   <div class="detail">
     <header>
-      <div id="back">
-      </div>
+      <router-link id="back" tag="div" to="/">
+      </router-link>
      <h6>证书详情</h6>
-     <a id="talk" href="http://chat10.live800.com/live800/chatClient/chatbox.jsp?companyID=1103633&configID=236115&jid=5862580955"></a>
+     <div id="talk"></div>
     </header>
     <div class="list">
       <div class="title">
@@ -25,28 +25,43 @@ export default {
   name: 'detail',
   data () {
     return {
-      // listdata:{
-      //   itemname:["项目名称","颁证日期","到期日期","下次维护日","认证机构","证书状态"],
-      //   itemdata:[21414561436416341635]
-      // }
+        id:'',
+        userid:'',
         listdata:[
-          {listname:"项目名称",datas:"iso9001"},{listname:"颁证日期"},{listname:"到期日期"},{listname:"下次维护日"},{listname:"认证机构"},{listname:"证书状态"}
+          {listname:"项目名称",datas:''},{listname:"颁证日期",datas:''},{listname:"到期日期",datas:''},{listname:"下次维护日",datas:''},{listname:"认证机构",datas:''},{listname:"证书状态",datas:''}
         ],
-        dats:{
-          xiangmu:'iso9001',
-          bangzheng:"201801001",
-          expire:"20180909",
-          next:"2015310",
-          org:"认我行",
-          status:"vailid"
-        }
     }
   },
   mounted(){
-    // for(let i in this.dats){
-    //   console.log(i)
-    //   console.log(this.dats[i])
-    // }
+    if(!this.$Cookies.get("logininfo")){
+        this.$router.push({
+      name:"login"
+    })
+    }else{
+      this.getdata()
+    }
+    
+  },
+  methods:{
+    getdata:function(){
+      let info=this.$route.query;
+        this.id=info.id;
+        this.userid=info.userid;
+        this.axios({
+          method:'post',
+          url:this.$api.api.detail,
+          data:{order_id:this.id,user_id:this.userid}
+        })
+        .then((msg)=>{
+          let info=msg.data.data
+          this.listdata[0].datas=info.certificate_name;
+          this.listdata[1].datas=info.due_date;
+          this.listdata[2].datas=info.issuing_date;
+          this.listdata[3].datas=info.next_maintenance_day;
+          this.listdata[4].datas=info.certificate_authority;
+          this.listdata[5].datas=info.status
+        })
+    }
   }
 }
 </script>
@@ -81,11 +96,6 @@ header{
     display: block;
     width: 100/75rem;
     height: 100%;
-    line-height: 68/75rem;
-    background-image: url(https://rwxoss.oss-cn-hangzhou.aliyuncs.com/gzh/talk.png);
-    background-size:44/75rem 40/75rem;
-    background-repeat: no-repeat;
-    background-position:0 center;
   }
 }
 .list{

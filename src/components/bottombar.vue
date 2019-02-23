@@ -39,12 +39,13 @@ export default {
     background-image: url(https://rwxoss.oss-cn-hangzhou.aliyuncs.com/gzh/phone.png);
     background-size: 47/75rem 47/75rem;
     background-repeat: no-repeat;
-    background-position: 0 10/75rem;
+    background-position: center 10/75rem;
     width: 88/75rem;
     height: 100%;
     box-sizing: border-box;
     padding-top:65/75rem;
     color: #8B8B8B;
+    text-align: center
   }
   .slogn{
     font-size: 36/75rem;
@@ -57,12 +58,13 @@ export default {
     background-image: url(https://rwxoss.oss-cn-hangzhou.aliyuncs.com/gzh/mine.png);
     background-size: 47/75rem 47/75rem;
     background-repeat: no-repeat;
-    background-position: 0 10/75rem;
+    background-position: center 10/75rem;
     width: 88/75rem;
     height: 100%;
     box-sizing: border-box;
     padding-top:65/75rem;
     color: #8B8B8B;
+    text-align: center
   }
 }
 </style>

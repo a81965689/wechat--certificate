@@ -1,31 +1,31 @@
 <template>
   <div class="myinfo">
-    <div class="tabbar">
+   <div class="tabbar">
         <div class="bar">
           <ul>
-            <li class="all" @touchstart=getdata(1)>
+            <li class="all" @click=getdata(0,0)>
               <img src="https://rwxoss.oss-cn-hangzhou.aliyuncs.com/gzh/all.png">
-              <p :class="num==1?'red':''">全部证书</p>
+              <p :class="num==0?'red':''">全部证书</p>
             </li>
-            <li class="contract" @touchstart=getdata(2)>
+            <li class="contract" @click=getdata(1,1)>
               <img src="https://rwxoss.oss-cn-hangzhou.aliyuncs.com/gzh/contract.png">
-              <p :class="num==2?'red':''">合同评审</p>
+              <p :class="num==1?'red':''">合同评审</p>
             </li>
-            <li class="plane" @touchstart=getdata(3)>
+            <li class="plane" @click=getdata(2,2)>
               <img src="https://rwxoss.oss-cn-hangzhou.aliyuncs.com/gzh/plane.png">
-              <p :class="num==3?'red':''">计划排定</p>
+              <p :class="num==2?'red':''">计划排定</p>
             </li>
-            <li class="doit" @touchstart=getdata(4)>
+            <li class="doit" @click=getdata(3,3)>
               <img src="https://rwxoss.oss-cn-hangzhou.aliyuncs.com/gzh/doit.png">
-              <p :class="num==4?'red':''">审核实施</p>
+              <p :class="num==3?'red':''">审核实施</p>
             </li>
-            <li class="passed" @touchstart=getdata(5)>
+            <li class="passed" @click=getdata(4,4)>
               <img src="https://rwxoss.oss-cn-hangzhou.aliyuncs.com/gzh/passed.png">
-              <p :class="num==5?'red':''">已出证</p>
+              <p :class="num==4?'red':''">已出证</p>
             </li>
-            <li class="annual" @touchstart=getdata(6)>
+            <li class="annual" @click=getdata(5,5)>
               <img src="https://rwxoss.oss-cn-hangzhou.aliyuncs.com/gzh/annual.png">
-              <p :class="num==6?'red':''">待年审</p>
+              <p :class="num==5?'red':''">待年审</p>
             </li>
           </ul>
         </div>
@@ -37,12 +37,12 @@
         <div>订单金额</div>
         <div>订单状态</div>
       </div>
-      <div class="listdata" v-for='(item,index) in data' :key="index">
-        <router-link :to="{name:'detail',params:{id:item.id}}" tag="div" class="list_row">
-          <div class="cer_name">{{item.cername}}</div>
-          <div class="time">{{item.time}}</div>
-          <div class="money">{{item.money}}</div>
-          <div class="status">{{item.status}}</div>
+      <div class="listdata">
+        <router-link v-for='(item,index) in data' :key="index" :to="{name:'detail',query:{id:item.id,userid:userid}}" tag="div" class="list_row">
+          <div class="cer_name">{{item.certificate_name}}</div>
+          <div class="time">{{item.order_time}}</div>
+          <div class="money">{{item.amount}}</div>
+          <div class="status">{{item.order_status}}</div>
         </router-link>
       </div>
     </div>
@@ -60,10 +60,14 @@ export default {
   name: 'myinfo',
   data () {
     return {
-      num:1,
-      companyname:"认我行",
-      dockman:"自己",
-      data:[{id:5,time:"2019.01.01",status:"订单评审",money:10000,cername:"iso9001"},{id:5,time:"2019.01.01",status:"订单评审",money:10000,cername:"iso9001"},{id:5,time:"2019.01.01",status:"订单评审",money:10000,cername:"iso9001"},{id:5,time:"2019.01.01",status:"订单评审",money:10000,cername:"iso9001"},{id:5,time:"2019.01.01",status:"订单评审",money:10000,cername:"iso9001"},{id:5,time:"2019.01.01",status:"订单评审",money:10000,cername:"iso9001"},{id:5,time:"2019.01.01",status:"订单评审",money:10000,cername:"iso9001"},{id:5,time:"2019.01.01",status:"订单评审",money:10000,cername:"iso9001"},{id:5,time:"2019.01.01",status:"订单评审",money:10000,cername:"iso9001"}]
+      num:0,
+      userid:'',
+      companyname:'',
+      dockman:'',
+      usertel:'',
+      data:[],//渲染到页面上的数据
+      backup:[],//备份复制的数据
+      btn:[{classname:'all',sequence:0,src:'https://rwxoss.oss-cn-hangzhou.aliyuncs.com/gzh/all.png',title:'全部证书',status:0},{classname:'contract',sequence:1,src:'https://rwxoss.oss-cn-hangzhou.aliyuncs.com/gzh/contract.png',title:'合同评审',status:1},{classname:'plan',sequence:2,src:'https://rwxoss.oss-cn-hangzhou.aliyuncs.com/gzh/contract.png',title:'计划排定',status:2},{classname:'doit',sequence:3,src:'https://rwxoss.oss-cn-hangzhou.aliyuncs.com/gzh/doit.png',title:'审核实施',status:3},{classname:'passed',sequence:4,src:'https://rwxoss.oss-cn-hangzhou.aliyuncs.com/gzh/passed.png',title:'已出证',status:4},{classname:'annual',sequence:5,src:'https://rwxoss.oss-cn-hangzhou.aliyuncs.com/gzh/annual.png',title:'待年审',status:5}]
     }
   },
   mounted(){
@@ -71,18 +75,64 @@ export default {
             this.$router.push({
           name:"login"
         })
+    }else{
+      //cookie里面获取过来的是字符串先转成对象才能使用
+      let datas=JSON.parse(this.$Cookies.get("logininfo"));
+      this.userid=datas.userid;
+      this.companyname=datas.companyname;
+      this.usertel=datas.usertel;
+      this.dockman=datas.companycontacts;
+      this.axios({
+        method:"post",
+        url:this.$api.api.orderform,
+        data:{page:1,user_id:this.userid}
+      })
+      .then((msg)=>{
+        this.data=msg.data.data
+        let info=msg.data.data
+        //把时间戳转换成日期
+        for(let i in info){
+          this.data[i].order_time=this.timestampToTime(info[i].order_time)
+        }
+        //复制一份筛选条件时更改副本；
+        this.backup=this.data;
+      })
     }
-    // this.$Cookies.set('264163514', '123',{expires:180});
-    // Cookies.get()
-    // Cookies.remove('name');
   },
   components:{
     bottombar
   },
   methods:{
-    getdata:function(n){
-        this.num=n
-    }
+    test:function(n){
+      alert(n)
+    },
+    getdata:function(n,status){
+        this.num=n;
+        if(status==0){
+          this.data=this.backup;
+          return false;
+        }
+        this.data=[];//先清空数据在筛选对应数据渲染
+        for(let i=0;i<this.backup.length;i++){
+          if(this.backup[i].status==status){
+            this.data.push(this.backup[i])
+          }
+        }
+    },
+    timestampToTime:function(timestamp){
+      var date = new Date(timestamp * 1000); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
+      let Y = date.getFullYear() + '-';
+      let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+      let D = this.change(date.getDate()) + ' ';
+      return Y + M + D;
+    },
+    change:function(t) {
+        if (t < 10) {
+            return "0" + t;
+        } else {
+            return t;
+        }
+      }
   }
 }
 </script>
@@ -174,15 +224,36 @@ export default {
   border-radius: 10/75rem;
   box-sizing: border-box;
   padding: 25/75rem;
-  overflow-y:scroll ;
+  // overflow-y:scroll ;
   .title{
     display: flex;
     justify-content: space-between;
     font-size: 28/75rem;
     color: #444444;
+    background-color: #fff;
   }
 }
-.list_row{
+.listdata{
+  overflow-y: scroll;
+  height:600/75rem;
+::-webkit-scrollbar{  
+    width: 10px;  
+    height: 10px;  
+    background-color: #c1e2f1;  
+}  
+/*定义滚动条轨道 内阴影+圆角*/  
+::-webkit-scrollbar-track{  
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);  
+    border-radius: 10px;  
+    background-color: #c1e2f1;  
+}  
+/*定义滑块 内阴影+圆角*/  
+::-webkit-scrollbar-thumb{  
+    border-radius: 10px;  
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);  
+    background-color: #1f7ebe;  
+}
+  .list_row{
   height: 80/75rem;
   border-bottom: 1px solid #F4F4F4;
   line-height: 80/75rem;
@@ -193,6 +264,8 @@ export default {
     width: 180/75rem;
   }
 }
+}
+
 .companyname{
   width: 698/75rem;
   height: 120/75rem;
