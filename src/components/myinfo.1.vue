@@ -41,23 +41,13 @@
         <div>订单金额</div>
         <div>订单状态</div>
       </div>
-      <!-- <div class="listdata">
+      <div class="listdata">
         <router-link v-for='(item,index) in data' :key="index" :to="{name:'detail',query:{id:item.id,userid:userid}}" tag="div" class="list_row">
           <div class="cer_name">{{item.certificate_name}}</div>
           <div class="time">{{item.order_time}}</div>
           <div class="money">{{item.amount}}</div>
           <div class="status">{{item.order_status}}</div>
         </router-link>
-      </div> -->
-      <div class="listdata">
-        <table >
-        <router-link v-for='(item,index) in data' :key="index" :to="{name:'detail',query:{id:item.id,userid:userid}}" tag="tr">
-          <td class="cer_name">{{item.certificate_name}}</td>
-          <td class="time">{{item.order_time}}</td>
-          <td class="money">{{item.amount}}</td>
-          <td class="status">{{item.order_status}}</td>
-        </router-link>
-      </table>
       </div>
     </div>
     <div class="companyname">
@@ -99,7 +89,7 @@ export default {
       this.axios({
         method:"post",
         url:this.$api.api.orderform,
-        data:{user_id:this.userid}
+        data:{page:1,user_id:this.userid}
       })
       .then((msg)=>{
         this.data=msg.data.data
@@ -262,9 +252,6 @@ export default {
     font-size: 28/75rem;
     color: #444444;
     background-color: #fff;
-    div{
-      width: 25%;
-    }
   }
 }
 .listdata{
@@ -287,25 +274,18 @@ export default {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);  
     background-color: #1f7ebe;  
 }
-  table{
-    width: 100%;
-    border-collapse:collapse;
-      tr{
-          height: 80/75rem;
-          border-bottom: 1px solid #F4F4F4;
-          font-size: 24/75rem;
-          color: #666666;
-          td{
-            width: 25%;
-            word-break:break-all;
-          }
-          .status{
-            color:#FF4810;
-          }
-        }
-        }
+  .list_row{
+  height: 80/75rem;
+  border-bottom: 1px solid #F4F4F4;
+  line-height: 80/75rem;
+  font-size: 24/75rem;
+  color: #666666;
+  display: flex;
+  .cer_name,.time,.money{
+    width: 180/75rem;
   }
-
+}
+}
 
 .companyname{
   width: 698/75rem;
